@@ -1,0 +1,156 @@
+import * as THREE from 'three';
+import React, { Suspense, useRef, useEffect, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { Environment, OrbitControls, useGLTF, Html } from '@react-three/drei';
+import gsap from 'gsap';
+import SiteComponent from '../site';
+
+const MainSceneComponent = ({exitEvent}) => {
+
+  const sourceObject = useRef();
+  const camera = useRef();
+  //Outside click event
+  const [viewerType, setViewerType] = useState('zoom-out');
+  
+  useEffect(() => {
+    if(viewerType === 'zoom-in') {
+      cameraOutAnimate();
+    }
+  }, [exitEvent]);
+
+  //Load model
+  const { nodes, materials, scene } = useGLTF('/asset/model/gacha_2.glb');
+  const cameraInAnimate = () => {
+    camera.current.minAzimuthAngle = -Math.PI;
+    camera.current.maxAzimuthAngle = Math.PI;
+    if (camera) {
+      gsap.to(camera.current, {
+        duration: 1,
+        onStart: () => {
+          camera.current.enablePan = false;
+          camera.current.enableRotate = false;
+        },
+        minAzimuthAngle: 0,
+        maxAzimuthAngle: 0,
+        minPolarAngle : Math.PI / 2.2,
+        maxPolarAngle : Math.PI / 2.2,
+        minDistance : 7500,
+        maxDistance : 7500,
+        onComplete: ()=>{
+          setViewerType('zoom-in');
+        }
+      });
+    }
+  }
+  const cameraOutAnimate = () => {
+    if (camera) {
+      gsap.to(camera.current, {
+        duration: 1,
+        onStart: () => {
+          setViewerType('zoom-out');
+        },
+        minPolarAngle : Math.PI / 2.7,
+        maxPolarAngle : Math.PI / 2.7,
+        minAzimuthAngle : -Infinity,
+        maxAzimuthAngle : Infinity,
+        minDistance : 10500,
+        maxDistance : 10500,
+        enablePan : true,
+        enableRotate : true,
+        onComplete: () => {
+          camera.current.minDistance = 7500;
+          camera.current.maxDistance = 10500;
+          camera.current.minPolarAngle = 0;
+          camera.current.maxPolarAngle = Math.PI / 2.2;
+        }
+      });
+    }
+  }
+
+  let sphereObj = [];
+  let atomObj;
+  
+  useEffect(() => {
+    sphereObj = sourceObject.current.children[0].children[0].children;
+    //-----Bottom pan object
+    sourceObject.current.children[0].children[3].position.y -= 100;
+    //-----Atom object
+    atomObj = sourceObject.current.children[0].children[1];
+  }, [sourceObject])
+  
+  useFrame((state) => {
+    const timer = state.clock.getElapsedTime();
+    
+    //-----Atom object Rotation
+    if (atomObj) {
+      atomObj.rotation.y -= 0.005;
+    }
+    
+    //-----Atom object Scale
+    if (atomObj) {
+      atomObj.scale.x = THREE.MathUtils.lerp(atomObj.scale.x, Math.abs(Math.sin(timer)), 0.001);
+      atomObj.scale.y = THREE.MathUtils.lerp(atomObj.scale.y, Math.abs(Math.sin(timer)), 0.001);
+      atomObj.scale.z = THREE.MathUtils.lerp(atomObj.scale.z, Math.abs(Math.sin(timer)), 0.001);
+    }
+
+    //-----Cloner objects Animation
+    for(let i = 0; i < sphereObj.length; i++) {
+      sphereObj[i].position.x = THREE.MathUtils.lerp(( (i % 5) % 2 === 0 ? sphereObj[i].position.x : sphereObj[i].position.y ), ( (i % 5) % 2 === 0 ? sphereObj[i].position.x : sphereObj[i].position.y ) + (100 * Math.sin(timer)), 0.01 + 0.01 * (i % 5))
+    }
+  })
+
+  return (
+    <>
+      <pointLight position={[0, 0, 100]} color={0xffffff} intensity={1} />
+      <Suspense fallback = {null}>
+        <group name='scene' position={[0, -700, 0]} ref={sourceObject} >
+            <primitive object={scene}>
+              <mesh />
+            </primitive>
+        </group>
+        <group name='vendingMachine_1' scale={[100, 100, 100]} position={[0, 400, 3700]} onPointerDown={cameraInAnimate} >
+          <mesh
+            name='screen_1'
+            geometry={nodes.Null6.children[0].children[0].geometry}
+            material={materials.Mat}
+            position={[-0.012, 2.005, 5.493]}
+            rotation={[-Math.PI/2, 0, 0]}
+          >
+            <Html name='display_1' className='content' position={[0, 0.05, 0]} rotation={[Math.PI/3.55, 0, 0]} scale={[1.6, 1.8, 1]} transform occlude >
+              <div className='wrapper'>
+                <SiteComponent />
+              </div>
+            </Html>
+          </mesh>
+          <mesh
+            name='back_1'
+            geometry={nodes.Null6.children[1].geometry}
+            material={scene.children[2].children[5].children[1].material}
+            position={[0.012, 1.388, -5.493]}
+            rotation={[-Math.PI/2, 0, 0]} />
+          <mesh
+            name='front_1'
+            geometry={nodes.Null6.children[2].geometry}
+            material={scene.children[2].children[5].children[2].material}
+            position={[0.012, -2.005, 1.628]}
+            rotation={[-Math.PI/2, 0, 0]} />
+        </group>
+      </Suspense>
+      <Environment preset='city'/>
+      <OrbitControls
+        ref={camera}
+        minDistance = {7500}
+        maxDistance = {10500}
+        target={[0, 10, 0]}
+        enablePan = {true}
+        enableRotate = {true}
+        maxPolarAngle = {Math.PI / 2.2}
+        enableDamping = {true}
+        dampingFactor = {0.07}
+      />
+    </>
+  )
+}
+
+useGLTF.preload('/asset/model/gacha_2.glb');
+export default MainSceneComponent;
