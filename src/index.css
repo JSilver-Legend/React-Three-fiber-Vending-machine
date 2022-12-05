@@ -29,8 +29,9 @@ main,
 }
 
 body {
+  display: flex;
   font-family: inter;
-  color: black;
+  color: white;
   background: #202025;
 }
 

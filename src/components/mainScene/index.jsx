@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import React, { Suspense, useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Environment, OrbitControls, useGLTF, Html } from '@react-three/drei';
 import gsap from 'gsap';
@@ -18,10 +18,6 @@ const MainSceneComponent = ({exitEvent}) => {
     // eslint-disable-next-line
   }, [exitEvent]);
 
-  //Loading progress
-  const Loading = () => {
-    console.log("Loading Progress ...");
-  }
 
   //Load model
   const { nodes, materials, scene } = useGLTF('/asset/model/gacha_2.glb');
@@ -121,40 +117,38 @@ const MainSceneComponent = ({exitEvent}) => {
   return (
     <>
       <pointLight position={[0, 0, 100]} color={0xffffff} intensity={2} />
-      <Suspense fallback = {<Loading />}>
-        <group name='scene' position={[0, -700, 0]} ref={sourceObject} >
-            <primitive object={scene}>
-              <mesh />
-            </primitive>
-        </group>
-        <group name='vendingMachine_1' scale={[100, 100, 100]} position={[0, 400, 3700]} onPointerDown={cameraInAnimate} >
-          <mesh
-            name='screen_1'
-            geometry={nodes.Null6.children[0].children[0].geometry}
-            material={materials.Mat}
-            position={[-0.012, 2.005, 5.493]}
-            rotation={[-Math.PI/2, 0, 0]}
-            >
-            <Html name='display_1' className='content' position={[0, 0.05, 0]} rotation={[Math.PI/3.55, 0, 0]} scale={[1.6, 1.8, 1]} transform occlude >
-              <div className='wrapper'>
-                <SiteComponent />
-              </div>
-            </Html>
-          </mesh>
-          <mesh
-            name='back_1'
-            geometry={nodes.Null6.children[1].geometry}
-            material={scene.children[2].children[5].children[1].material}
-            position={[0.012, 1.388, -5.493]}
-            rotation={[-Math.PI/2, 0, 0]} />
-          <mesh
-            name='front_1'
-            geometry={nodes.Null6.children[2].geometry}
-            material={scene.children[2].children[5].children[2].material}
-            position={[0.012, -2.005, 1.628]}
-            rotation={[-Math.PI/2, 0, 0]} />
-        </group>
-      </Suspense>
+      <group name='scene' position={[0, -700, 0]} ref={sourceObject} >
+          <primitive object={scene}>
+            <mesh />
+          </primitive>
+      </group>
+      <group name='vendingMachine_1' scale={[100, 100, 100]} position={[0, 400, 3700]} onPointerDown={cameraInAnimate} >
+        <mesh
+          name='screen_1'
+          geometry={nodes.Null6.children[0].children[0].geometry}
+          material={materials.Mat}
+          position={[-0.012, 2.005, 5.493]}
+          rotation={[-Math.PI/2, 0, 0]}
+          >
+          <Html name='display_1' className='content' position={[0, 0.05, 0]} rotation={[Math.PI/3.55, 0, 0]} scale={[1.6, 1.8, 1]} transform occlude >
+            <div className='wrapper'>
+              <SiteComponent />
+            </div>
+          </Html>
+        </mesh>
+        <mesh
+          name='back_1'
+          geometry={nodes.Null6.children[1].geometry}
+          material={scene.children[2].children[5].children[1].material}
+          position={[0.012, 1.388, -5.493]}
+          rotation={[-Math.PI/2, 0, 0]} />
+        <mesh
+          name='front_1'
+          geometry={nodes.Null6.children[2].geometry}
+          material={scene.children[2].children[5].children[2].material}
+          position={[0.012, -2.005, 1.628]}
+          rotation={[-Math.PI/2, 0, 0]} />
+      </group>
       <Environment
         // preset='sunset'
         files="./asset/env-background/venice_sunset_1k.hdr"

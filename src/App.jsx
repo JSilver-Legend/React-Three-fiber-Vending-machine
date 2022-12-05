@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import './App.css';
 import MainSceneComponent from "./components/mainScene";
+
+function Loading () {
+  return (
+  <Html>
+    <div>Loading...</div>
+  </Html>
+  );
+}
 
 function App() {
 
@@ -26,7 +35,9 @@ function App() {
         }
       }}
     >
-      <MainSceneComponent exitEvent={canvasClick} />
+      <Suspense fallback = {<Loading />}>
+        <MainSceneComponent exitEvent={canvasClick} />
+      </Suspense>
     </Canvas>
   );
 }
