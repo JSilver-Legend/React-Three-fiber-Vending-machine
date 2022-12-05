@@ -17,7 +17,7 @@ const MainSceneComponent = ({exitEvent}) => {
       cameraOutAnimate();
     }
   }, [exitEvent]);
-
+  //Loading progress
   //Load model
   const { nodes, materials, scene } = useGLTF('/asset/model/gacha_2.glb');
   const cameraInAnimate = () => {
@@ -67,35 +67,50 @@ const MainSceneComponent = ({exitEvent}) => {
     }
   }
 
-  let sphereObj = [];
-  let atomObj;
   
   useEffect(() => {
-    sphereObj = sourceObject.current.children[0].children[0].children;
     //-----Bottom pan object
     sourceObject.current.children[0].children[3].position.y -= 100;
-    //-----Atom object
-    atomObj = sourceObject.current.children[0].children[1];
+
+    //Atom object ===> sourceObject.current.children[0].children[1]
+    //Cloner Object ===> sourceObject.current.children[0].children[0].children
   }, [sourceObject])
   
   useFrame((state) => {
     const timer = state.clock.getElapsedTime();
     
     //-----Atom object Rotation
-    if (atomObj) {
-      atomObj.rotation.y -= 0.005;
+    if (sourceObject.current.children[0].children[1]) {
+      sourceObject.current.children[0].children[1].rotation.y -= 0.005;
     }
     
     //-----Atom object Scale
-    if (atomObj) {
-      atomObj.scale.x = THREE.MathUtils.lerp(atomObj.scale.x, Math.abs(Math.sin(timer)), 0.001);
-      atomObj.scale.y = THREE.MathUtils.lerp(atomObj.scale.y, Math.abs(Math.sin(timer)), 0.001);
-      atomObj.scale.z = THREE.MathUtils.lerp(atomObj.scale.z, Math.abs(Math.sin(timer)), 0.001);
+    if (sourceObject.current.children[0].children[1]) {
+      sourceObject.current.children[0].children[1].scale.x = THREE.MathUtils.lerp(sourceObject.current.children[0].children[1].scale.x, Math.abs(Math.sin(timer)), 0.001);
+      sourceObject.current.children[0].children[1].scale.y = THREE.MathUtils.lerp(sourceObject.current.children[0].children[1].scale.y, Math.abs(Math.sin(timer)), 0.001);
+      sourceObject.current.children[0].children[1].scale.z = THREE.MathUtils.lerp(sourceObject.current.children[0].children[1].scale.z, Math.abs(Math.sin(timer)), 0.001);
     }
 
     //-----Cloner objects Animation
-    for(let i = 0; i < sphereObj.length; i++) {
-      sphereObj[i].position.x = THREE.MathUtils.lerp(( (i % 5) % 2 === 0 ? sphereObj[i].position.x : sphereObj[i].position.y ), ( (i % 5) % 2 === 0 ? sphereObj[i].position.x : sphereObj[i].position.y ) + (100 * Math.sin(timer)), 0.01 + 0.01 * (i % 5))
+    for(let i = 0; i < sourceObject.current.children[0].children[0].children.length; i++) {
+      sourceObject.current.children[0].children[0].children[i].position.x =
+        THREE.MathUtils.lerp(
+          (
+            //first place
+            (i % 5) % 2 === 0 ?
+            sourceObject.current.children[0].children[0].children[i].position.x
+            :
+            sourceObject.current.children[0].children[0].children[i].position.y
+          ),
+          (
+            //last place
+            (i % 5) % 2 === 0 ?
+            sourceObject.current.children[0].children[0].children[i].position.x
+            :
+            sourceObject.current.children[0].children[0].children[i].position.y ) + (100 * Math.sin(timer)),
+            //step
+            0.01 + 0.01 * (i % 5)
+          )
     }
   })
 
