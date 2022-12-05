@@ -11,13 +11,18 @@ const MainSceneComponent = ({exitEvent}) => {
   const camera = useRef();
   //Outside click event
   const [viewerType, setViewerType] = useState('zoom-out');
-  
   useEffect(() => {
     if(viewerType === 'zoom-in') {
       cameraOutAnimate();
     }
+    // eslint-disable-next-line
   }, [exitEvent]);
+
   //Loading progress
+  const Loading = () => {
+    console.log("Loading Progress ...");
+  }
+
   //Load model
   const { nodes, materials, scene } = useGLTF('/asset/model/gacha_2.glb');
   const cameraInAnimate = () => {
@@ -66,10 +71,9 @@ const MainSceneComponent = ({exitEvent}) => {
       });
     }
   }
-
   
   useEffect(() => {
-    //-----Bottom pan object
+    //-----Bottom pan object move to down
     sourceObject.current.children[0].children[3].position.y -= 100;
 
     //Atom object ===> sourceObject.current.children[0].children[1]
@@ -116,8 +120,8 @@ const MainSceneComponent = ({exitEvent}) => {
 
   return (
     <>
-      <pointLight position={[0, 0, 100]} color={0xffffff} intensity={1} />
-      <Suspense fallback = {null}>
+      <pointLight position={[0, 0, 100]} color={0xffffff} intensity={2} />
+      <Suspense fallback = {<Loading />}>
         <group name='scene' position={[0, -700, 0]} ref={sourceObject} >
             <primitive object={scene}>
               <mesh />
@@ -130,7 +134,7 @@ const MainSceneComponent = ({exitEvent}) => {
             material={materials.Mat}
             position={[-0.012, 2.005, 5.493]}
             rotation={[-Math.PI/2, 0, 0]}
-          >
+            >
             <Html name='display_1' className='content' position={[0, 0.05, 0]} rotation={[Math.PI/3.55, 0, 0]} scale={[1.6, 1.8, 1]} transform occlude >
               <div className='wrapper'>
                 <SiteComponent />
@@ -151,7 +155,12 @@ const MainSceneComponent = ({exitEvent}) => {
             rotation={[-Math.PI/2, 0, 0]} />
         </group>
       </Suspense>
-      <Environment preset='city'/>
+      <Environment
+        // preset='sunset'
+        files="./asset/env-background/venice_sunset_1k.hdr"
+        background
+        blur={0.5}
+        />
       <OrbitControls
         ref={camera}
         minDistance = {7500}
