@@ -40,9 +40,8 @@ const MainSceneComponent = ({exitEvent}) => {
         maxPolarAngle : Math.PI / 2.2,
         minDistance : 7500,
         maxDistance : 7500,
-        enablePan : false,
-        enableRotate : false,
         onComplete: ()=>{
+          camera.current.enableZoom = false;
           setViewerType('zoom-in');
         }
       });
@@ -69,6 +68,7 @@ const MainSceneComponent = ({exitEvent}) => {
           camera.current.maxDistance = 10500;
           camera.current.minPolarAngle = 0;
           camera.current.maxPolarAngle = Math.PI / 2.2;
+          camera.current.enableZoom = true;
         }
       });
     }
