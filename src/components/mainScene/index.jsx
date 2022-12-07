@@ -40,6 +40,8 @@ const MainSceneComponent = ({exitEvent}) => {
         maxPolarAngle : Math.PI / 2.2,
         minDistance : 7500,
         maxDistance : 7500,
+        enablePan : false,
+        enableRotate : false,
         onComplete: ()=>{
           setViewerType('zoom-in');
         }
@@ -73,9 +75,8 @@ const MainSceneComponent = ({exitEvent}) => {
   }
   
   useEffect(() => {
-    console.log(sourceObject);
     //-----Bottom pan object move to down
-    sourceObject.current.children[0].children[3].position.y -= 100;
+    sourceObject.current.children[0].children[3].position.y -= 200;
     //-----22st Cloner visible false;
     sourceObject.current.children[0].children[0].children[22].visible = false;
     //-----Gacha Machines visible false;
@@ -138,6 +139,7 @@ const MainSceneComponent = ({exitEvent}) => {
             nodes={nodes}
             scene={scene}
             onClick={() => cameraInAnimate(item)}
+            viewMode={viewerType}
           />
         ))
       }

@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import './App.css';
 import MainSceneComponent from "./components/mainScene";
+import { selector } from "gsap";
 
 function Loading () {
   return (
@@ -18,16 +19,18 @@ function App() {
 
   return (
     <Canvas
+      id='main-canvas'
       dpr={2}      
       style = {{
         backgroundColor: 'black', 
         width:'100vw',
-        height: '100vh'
+        height: '100vh',
+        userSelect: 'none'
       }}
       camera = {{
         position: [0, 0, 500],
         fov: 45,
-        far: 50000
+        far: 300000
       }}
       onClick = {(e)=>{
         if(e.target.tagName === 'CANVAS') {

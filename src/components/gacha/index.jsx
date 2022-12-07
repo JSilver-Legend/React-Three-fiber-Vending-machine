@@ -1,7 +1,8 @@
 import React from 'react'
 import { Html } from '@react-three/drei'
 import Site from '../site'
-const GachaMachine = ({item, nodes, scene, onClick}) => {
+const GachaMachine = ({item, nodes, scene, onClick, viewMode}) => {
+
   return (
     <>
         <group
@@ -10,8 +11,20 @@ const GachaMachine = ({item, nodes, scene, onClick}) => {
             rotation={item.rotation}
             scale={[100, 100, 100]}
             onPointerDown={(e) => {
-                onClick();
-                e.stopPropagation();
+                if (viewMode === 'zoom-out') {
+                    onClick();
+                    e.stopPropagation();
+                }
+            }}
+            onPointerOver={() => {
+                if (viewMode === 'zoom-in') {
+                    document.getElementById('main-canvas').style.cursor = 'default'
+                } else {
+                    document.getElementById('main-canvas').style.cursor = 'pointer'
+                }
+            }}
+            onPointerLeave={() => {
+                document.getElementById('main-canvas').style.cursor = 'default'
             }}
 
         >

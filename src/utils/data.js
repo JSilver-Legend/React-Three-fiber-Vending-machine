@@ -7,12 +7,12 @@ export const GachaData =[
     {
         number      : 2,
         position    : [-Math.sqrt(3) * 2000, 400, 2000],
-        rotation    : [0, Math.PI / 3 * 5, 0]
+        rotation    : [0, -Math.PI / 3, 0]
     },
     {
         number      : 3,
         position    : [-3650, 400, -2000],
-        rotation    : [0, Math.PI / 3 * 4, 0]
+        rotation    : [0, -Math.PI / 3 * 2, 0]
     },
     {
         number      : 4,
