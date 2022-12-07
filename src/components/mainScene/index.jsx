@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Environment, OrbitControls, useGLTF, Html } from '@react-three/drei';
+import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import gsap from 'gsap';
-import SiteComponent from '../site';
+import GachaMachine from '../gacha';
+import { GachaData } from '../../utils/data';
 
 const MainSceneComponent = ({exitEvent}) => {
 
@@ -20,8 +21,10 @@ const MainSceneComponent = ({exitEvent}) => {
 
 
   //Load model
-  const { nodes, materials, scene } = useGLTF('/asset/model/gacha_2.glb');
-  const cameraInAnimate = () => {
+  const { nodes, scene } = useGLTF('/asset/model/gacha_2.glb');
+
+  //Camera animation
+  const cameraInAnimate = (item) => {
     camera.current.minAzimuthAngle = -Math.PI;
     camera.current.maxAzimuthAngle = Math.PI;
     if (camera) {
@@ -31,8 +34,8 @@ const MainSceneComponent = ({exitEvent}) => {
           camera.current.enablePan = false;
           camera.current.enableRotate = false;
         },
-        minAzimuthAngle: 0,
-        maxAzimuthAngle: 0,
+        minAzimuthAngle: item.rotation[1],
+        maxAzimuthAngle: item.rotation[1],
         minPolarAngle : Math.PI / 2.2,
         maxPolarAngle : Math.PI / 2.2,
         minDistance : 7500,
@@ -43,6 +46,7 @@ const MainSceneComponent = ({exitEvent}) => {
       });
     }
   }
+
   const cameraOutAnimate = () => {
     if (camera) {
       gsap.to(camera.current, {
@@ -69,11 +73,14 @@ const MainSceneComponent = ({exitEvent}) => {
   }
   
   useEffect(() => {
+    console.log(sourceObject);
     //-----Bottom pan object move to down
     sourceObject.current.children[0].children[3].position.y -= 100;
+    //-----22st Cloner visible false;
+    sourceObject.current.children[0].children[0].children[22].visible = false;
+    //-----Gacha Machines visible false;
+    sourceObject.current.children[0].children[2].visible = false;
 
-    //Atom object ===> sourceObject.current.children[0].children[1]
-    //Cloner Object ===> sourceObject.current.children[0].children[0].children
   }, [sourceObject])
   
   useFrame((state) => {
@@ -122,38 +129,20 @@ const MainSceneComponent = ({exitEvent}) => {
             <mesh />
           </primitive>
       </group>
-      <group name='vendingMachine_1' scale={[100, 100, 100]} position={[0, 400, 3700]} onPointerDown={cameraInAnimate} >
-        <mesh
-          name='screen_1'
-          geometry={nodes.Null6.children[0].children[0].geometry}
-          material={materials.Mat}
-          position={[-0.012, 2.005, 5.493]}
-          rotation={[-Math.PI/2, 0, 0]}
-          >
-          <Html name='display_1' className='content' position={[0, 0.05, 0]} rotation={[Math.PI/3.55, 0, 0]} scale={[1.6, 1.8, 1]} transform occlude >
-            <div className='wrapper'>
-              <SiteComponent />
-            </div>
-          </Html>
-        </mesh>
-        <mesh
-          name='back_1'
-          geometry={nodes.Null6.children[1].geometry}
-          material={scene.children[2].children[5].children[1].material}
-          position={[0.012, 1.388, -5.493]}
-          rotation={[-Math.PI/2, 0, 0]} />
-        <mesh
-          name='front_1'
-          geometry={nodes.Null6.children[2].geometry}
-          material={scene.children[2].children[5].children[2].material}
-          position={[0.012, -2.005, 1.628]}
-          rotation={[-Math.PI/2, 0, 0]} />
-      </group>
+      {
+        (nodes && scene) &&
+        GachaData.map((item, index) => (
+          <GachaMachine
+            key={index+'gacha'}
+            item={item}
+            nodes={nodes}
+            scene={scene}
+            onClick={() => cameraInAnimate(item)}
+          />
+        ))
+      }
       <Environment
-        // preset='sunset'
-        files="./asset/env-background/venice_sunset_1k.hdr"
-        background
-        blur={0.5}
+        preset='sunset'
         />
       <OrbitControls
         ref={camera}

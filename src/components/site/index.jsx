@@ -79,7 +79,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const SiteComponent = () => {
+const Site = () => {
   return (
     <div className="relative bg-gray-50">
       <Popover className="relative bg-white shadow">
@@ -352,4 +352,4 @@ const SiteComponent = () => {
   )
 }
 
-export default SiteComponent
+export default Site
