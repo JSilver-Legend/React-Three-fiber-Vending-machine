@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
+import {  OrbitControls, useGLTF } from '@react-three/drei';
 import gsap from 'gsap';
 import GachaMachine from '../gacha';
 import { GachaData } from '../../utils/data';
+import Floor from '../floor';
 
 const MainSceneComponent = ({exitEvent}) => {
 
@@ -76,7 +77,7 @@ const MainSceneComponent = ({exitEvent}) => {
   
   useEffect(() => {
     //-----Bottom pan object move to down
-    sourceObject.current.children[0].children[3].position.y -= 200;
+    sourceObject.current.children[0].children[3].visible = false;
     //-----22st Cloner visible false;
     sourceObject.current.children[0].children[0].children[22].visible = false;
     //-----Gacha Machines visible false;
@@ -130,6 +131,7 @@ const MainSceneComponent = ({exitEvent}) => {
             <mesh />
           </primitive>
       </group>
+      <Floor />
       {
         (nodes && scene) &&
         GachaData.map((item, index) => (
@@ -143,9 +145,6 @@ const MainSceneComponent = ({exitEvent}) => {
           />
         ))
       }
-      <Environment
-        preset='sunset'
-        />
       <OrbitControls
         ref={camera}
         minDistance = {7500}

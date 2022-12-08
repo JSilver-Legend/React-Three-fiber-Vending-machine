@@ -1,9 +1,8 @@
 import React, { useState, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
+import { Html, Environment } from "@react-three/drei";
 import './App.css';
 import MainSceneComponent from "./components/mainScene";
-import { selector } from "gsap";
 
 function Loading () {
   return (
@@ -38,6 +37,10 @@ function App() {
         }
       }}
     >
+      <Environment preset='sunset' />
+      <fog attach="fog" args={['#000000', 18000, 23000]} />
+      <color attach="background" args={['#000000']} />
+      {/* <ambientLight intensity={0.25} color="#0E0E0E"/> */}
       <Suspense fallback = {<Loading />}>
         <MainSceneComponent exitEvent={canvasClick} />
       </Suspense>
