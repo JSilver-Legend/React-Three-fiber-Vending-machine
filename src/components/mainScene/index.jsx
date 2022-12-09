@@ -1,18 +1,20 @@
-import * as THREE from 'three';
 import React, { useRef, useEffect, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
 import {  OrbitControls, useGLTF } from '@react-three/drei';
 import gsap from 'gsap';
-import GachaMachine from '../gacha';
-import { GachaData } from '../../utils/data';
-import Floor from '../floor';
+
+// import { GachaData } from '../../utils/data';
+// import GachaMachine from '../gacha';
+// import Floor from '../floor';
+// import Atom from '../atom';
+// import Cloner from '../cloner';
 
 const MainSceneComponent = ({exitEvent}) => {
 
-  const sourceObject = useRef();
+  const { nodes, scene } = useGLTF('/asset/model/gacha_2.glb'); //load model
+  
   const camera = useRef();
-  //Outside click event
-  const [viewerType, setViewerType] = useState('zoom-out');
+  
+  const [viewerType, setViewerType] = useState('zoom-out'); 
   useEffect(() => {
     if(viewerType === 'zoom-in') {
       cameraOutAnimate();
@@ -21,8 +23,14 @@ const MainSceneComponent = ({exitEvent}) => {
   }, [exitEvent]);
 
 
-  //Load model
-  const { nodes, scene } = useGLTF('/asset/model/gacha_2.glb');
+  
+
+  useEffect(() => {
+    console.log('parent scene->', scene);
+    
+    
+  }, [scene]);
+
 
   //Camera animation
   const cameraInAnimate = (item) => {
@@ -75,76 +83,30 @@ const MainSceneComponent = ({exitEvent}) => {
     }
   }
   
-  useEffect(() => {
-    //-----Bottom pan object move to down
-    sourceObject.current.children[0].children[3].visible = false;
-    //-----22st Cloner visible false;
-    sourceObject.current.children[0].children[0].children[22].visible = false;
-    //-----Gacha Machines visible false;
-    sourceObject.current.children[0].children[2].visible = false;
-
-  }, [sourceObject])
-  
-  useFrame((state) => {
-    const timer = state.clock.getElapsedTime();
-    
-    //-----Atom object Rotation
-    if (sourceObject.current.children[0].children[1]) {
-      sourceObject.current.children[0].children[1].rotation.y -= 0.005;
-    }
-    
-    //-----Atom object Scale
-    if (sourceObject.current.children[0].children[1]) {
-      sourceObject.current.children[0].children[1].scale.x = THREE.MathUtils.lerp(sourceObject.current.children[0].children[1].scale.x, Math.abs(Math.sin(timer)), 0.001);
-      sourceObject.current.children[0].children[1].scale.y = THREE.MathUtils.lerp(sourceObject.current.children[0].children[1].scale.y, Math.abs(Math.sin(timer)), 0.001);
-      sourceObject.current.children[0].children[1].scale.z = THREE.MathUtils.lerp(sourceObject.current.children[0].children[1].scale.z, Math.abs(Math.sin(timer)), 0.001);
-    }
-
-    //-----Cloner objects Animation
-    for(let i = 0; i < sourceObject.current.children[0].children[0].children.length; i++) {
-      sourceObject.current.children[0].children[0].children[i].position.x =
-        THREE.MathUtils.lerp(
-          (
-            //first place
-            (i % 5) % 2 === 0 ?
-            sourceObject.current.children[0].children[0].children[i].position.x
-            :
-            sourceObject.current.children[0].children[0].children[i].position.y
-          ),
-          (
-            //last place
-            (i % 5) % 2 === 0 ?
-            sourceObject.current.children[0].children[0].children[i].position.x
-            :
-            sourceObject.current.children[0].children[0].children[i].position.y ) + (100 * Math.sin(timer)),
-            //step
-            0.01 + 0.01 * (i % 5)
-          )
-    }
-  })
-
   return (
     <>
       <pointLight position={[0, 0, 100]} color={0xffffff} intensity={2} />
-      <group name='scene' position={[0, -700, 0]} ref={sourceObject} >
-          <primitive object={scene}>
-            <mesh />
-          </primitive>
-      </group>
-      <Floor />
-      {
-        (nodes && scene) &&
+      {/* <Floor /> */}
+      {/* <Atom scene={scene} /> */}
+      {/* <Cloner scene={scene} /> */}
+      {/* {
         GachaData.map((item, index) => (
           <GachaMachine
             key={index+'gacha'}
             item={item}
             nodes={nodes}
-            scene={scene}
+            // scene={scene}
+            frontMaterial={frontMaterial}
+            backMaterial={backMaterial}
+            screenMaterial={screenMaterial}
             onClick={() => cameraInAnimate(item)}
             viewMode={viewerType}
           />
         ))
-      }
+      } */}
+      <primitive object={scene}>
+        <mesh />
+      </primitive>
       <OrbitControls
         ref={camera}
         minDistance = {7500}
