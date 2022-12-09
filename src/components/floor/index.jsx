@@ -1,12 +1,13 @@
 import React from 'react'
 import { MeshReflectorMaterial, useTexture } from '@react-three/drei'
-import { MeshStandardMaterial, RepeatWrapping } from 'three'
+import { RepeatWrapping } from 'three'
 
 const Floor = () => {
   const floorBumpMat = useTexture("/asset/texture/floor.jpg")
   floorBumpMat.wrapS = RepeatWrapping;
   floorBumpMat.wrapT = RepeatWrapping;
   floorBumpMat.repeat.set(10, 10)
+  
   return (
     <mesh name='floor' position={[0, -720, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
       <planeGeometry args={[50000, 50000]} />

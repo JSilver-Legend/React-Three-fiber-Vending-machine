@@ -2,37 +2,44 @@ import React, { useRef, useEffect, useState } from 'react';
 import {  OrbitControls, useGLTF } from '@react-three/drei';
 import gsap from 'gsap';
 
-// import { GachaData } from '../../utils/data';
-// import GachaMachine from '../gacha';
-// import Floor from '../floor';
-// import Atom from '../atom';
+import { GachaData } from '../../utils/data';
+import GachaMachine from '../gacha';
+import Floor from '../floor';
+import Atom from '../atom';
 // import Cloner from '../cloner';
 
 const MainSceneComponent = ({exitEvent}) => {
 
-  const { nodes, scene } = useGLTF('/asset/model/gacha_2.glb'); //load model
-  
-  const camera = useRef();
-  
-  const [viewerType, setViewerType] = useState('zoom-out'); 
+  const { nodes, scene } = useGLTF('/asset/model/gacha_2.glb');   // load model
+
+  const camera = useRef();    // select camera in OrbitControls
+  const [viewerType, setViewerType] = useState('zoom-out');   // view mode hook
+
+  const atomObj         = nodes['Atom_Array1'].children[0];
+  const gachaScreenObj  = nodes['Null6'].children[0].children[0];
+  const gachaBackObj    = nodes['Null6'].children[1];
+  const gachaFrontObj   = nodes['Null6'].children[2];
+
+  //params
+  useEffect(() => {
+    console.log("nodes ===> ", atomObj);
+  }, [nodes]);
+
+  /**
+   * 
+   * Camera View Mode------------------------------
+   * 
+   * @param
+   */
+
+  // camera outside mode change by `exitEvent` props from `App component`
   useEffect(() => {
     if(viewerType === 'zoom-in') {
       cameraOutAnimate();
     }
     // eslint-disable-next-line
-  }, [exitEvent]);
+  }, [exitEvent]);    
 
-
-  
-
-  useEffect(() => {
-    console.log('parent scene->', scene);
-    
-    
-  }, [scene]);
-
-
-  //Camera animation
   const cameraInAnimate = (item) => {
     camera.current.minAzimuthAngle = -Math.PI;
     camera.current.maxAzimuthAngle = Math.PI;
@@ -82,38 +89,37 @@ const MainSceneComponent = ({exitEvent}) => {
       });
     }
   }
-  
+
   return (
     <>
-      <pointLight position={[0, 0, 100]} color={0xffffff} intensity={2} />
-      {/* <Floor /> */}
-      {/* <Atom scene={scene} /> */}
+      <pointLight
+        position  = {[0, 0, 100]}
+        color     = {0xffffff}
+        intensity = {2}
+      />
+      <Floor />
+      <Atom atomObj = {atomObj} />
       {/* <Cloner scene={scene} /> */}
-      {/* {
+      {
         GachaData.map((item, index) => (
           <GachaMachine
-            key={index+'gacha'}
-            item={item}
-            nodes={nodes}
-            // scene={scene}
-            frontMaterial={frontMaterial}
-            backMaterial={backMaterial}
-            screenMaterial={screenMaterial}
-            onClick={() => cameraInAnimate(item)}
-            viewMode={viewerType}
+            key           = {index+'gacha'}
+            item          = {item}
+            screenObj     = {gachaScreenObj}
+            backObj       = {gachaBackObj}
+            frontObj      = {gachaFrontObj}
+            viewMode      = {viewerType}
+            onClick = {() => cameraInAnimate(item)}
           />
         ))
-      } */}
-      <primitive object={scene}>
-        <mesh />
-      </primitive>
+      }
       <OrbitControls
-        ref={camera}
-        minDistance = {7500}
-        maxDistance = {10500}
-        target={[0, 10, 0]}
-        enablePan = {true}
-        enableRotate = {true}
+        ref           = {camera}
+        minDistance   = {7500}
+        maxDistance   = {10500}
+        target        = {[0, 10, 0]}
+        enablePan     = {true}
+        enableRotate  = {true}
         maxPolarAngle = {Math.PI / 2.2}
         enableDamping = {true}
         dampingFactor = {0.07}

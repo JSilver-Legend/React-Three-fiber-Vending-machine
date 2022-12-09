@@ -18,8 +18,8 @@ function App() {
 
   return (
     <Canvas
-      id='main-canvas'
-      dpr={2}      
+      id    = 'main-canvas'
+      dpr   = {2}      
       style = {{
         backgroundColor: 'black', 
         width:'100vw',
@@ -31,18 +31,18 @@ function App() {
         fov: 45,
         far: 300000
       }}
-      onClick = {(e)=>{
+      onClick = {(e) => {
         if(e.target.tagName === 'CANVAS') {
           setCanvasClick(!canvasClick);
         }
       }}
     >
-      <Environment preset='sunset' />
-      <fog attach="fog" args={['#000000', 18000, 23000]} />
-      <color attach="background" args={['#000000']} />
-      {/* <ambientLight intensity={0.25} color="#0E0E0E"/> */}
+      <Environment preset = 'sunset' />
+      <fog attach = "fog" args = {['#000000', 18000, 23000]} />
+      <color attach = "background" args = {['#000000']} />
+      {/* <ambientLight intensity = {0.25} color = "#0E0E0E"/> */}
       <Suspense fallback = {<Loading />}>
-        <MainSceneComponent exitEvent={canvasClick} />
+        <MainSceneComponent exitEvent = {canvasClick} />
       </Suspense>
     </Canvas>
   );
