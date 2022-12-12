@@ -108,8 +108,9 @@ const MainSceneComponent = ({exitEvent}) => {
       {
         ClonerData.map((item, index) => (
           <Cloner
-            key  = {index + 'cloner'}
-            item = {item}
+            key   = {index + 'cloner'}
+            item  = {item}
+            index = {index}
           />
         ))
       }

@@ -27,7 +27,7 @@ export const ClonerData = [
   {
     number   : 6,
     position : [-450, 584, -1000],
-    scale    : [21, 21, 21]
+    scale    : [12, 12, 12]
   },
   {
     number   : 7,
@@ -96,7 +96,7 @@ export const ClonerData = [
   },
   {
     number   : 20,
-    position : [-5060, 1292, 3284],
+    position : [-5060, 52, 3284],
     scale    : [10, 10, 10]
   },
   {
