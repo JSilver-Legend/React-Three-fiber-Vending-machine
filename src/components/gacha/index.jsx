@@ -1,11 +1,14 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import { Html } from '@react-three/drei'
 import Site from '../site'
 const GachaMachine = ({
     item,
     screenObj,
+    screenMat,
     backObj,
+    backMat,
     frontObj,
+    frontMat,
     viewMode,
     onClick
 }) => {
@@ -37,12 +40,11 @@ const GachaMachine = ({
         >
             <mesh
                 name        = 'screen'
+                material    = {screenMat}
                 geometry    = {screenObj.geometry}
                 position    = {[-0.012, 2.005, 5.493]}
                 rotation    = {[-Math.PI/2, 0, 0]}
-                // material={}
             >
-                <meshStandardMaterial color = {"#2B2404"} />
                 <Html
                     className   = 'content'
                     name        = 'display'
@@ -59,21 +61,21 @@ const GachaMachine = ({
             </mesh>
             <mesh
                 name     = 'back'
+                // material = {backMat}
                 geometry = {backObj.geometry}
                 position = {[0.012, 1.388, -5.493]}
                 rotation = {[-Math.PI/2, 0, 0]}
-                // material={}
             >
-                <meshStandardMaterial color={"#4E4D11"} />
+                <meshStandardMaterial color={'#337AFF'} />
             </mesh>
             <mesh
                 name     = 'front'
+                // material = {frontMat}
                 geometry = {frontObj.geometry}
                 position = {[0.012, -2.005, 1.628]}
                 rotation = {[-Math.PI/2, 0, 0]}
-                // material={}
             >
-                <meshStandardMaterial color={"#BDBB49"} />
+                <meshStandardMaterial color={'#83AEFF'} />
             </mesh>
         </group>
     </>

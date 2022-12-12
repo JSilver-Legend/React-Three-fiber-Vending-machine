@@ -1,28 +1,32 @@
 import React, { useRef, useEffect, useState } from 'react';
-import {  OrbitControls, useGLTF } from '@react-three/drei';
+import { Scene } from 'three';
+import { OrbitControls, useGLTF } from '@react-three/drei';
 import gsap from 'gsap';
 
-import { GachaData } from '../../utils/data';
 import GachaMachine from '../gacha';
+import { GachaData } from '../../utils/gachaData';
 import Floor from '../floor';
 import Atom from '../atom';
-// import Cloner from '../cloner';
+import Cloner from '../cloner';
+import { ClonerData } from '../../utils/clonerData'
 
 const MainSceneComponent = ({exitEvent}) => {
 
-  const { nodes, scene } = useGLTF('/asset/model/gacha_2.glb');   // load model
+  const { nodes, materials, scene } = useGLTF('/asset/model/gacha_2.glb');   // load model
 
   const camera = useRef();    // select camera in OrbitControls
   const [viewerType, setViewerType] = useState('zoom-out');   // view mode hook
 
   const atomObj         = nodes['Atom_Array1'].children[0];
   const gachaScreenObj  = nodes['Null6'].children[0].children[0];
+  const gachaScreenMat  = materials['Mat'];
   const gachaBackObj    = nodes['Null6'].children[1];
+  // const gachaBackMat    = scene.children[2].children[5].children[1].material;
   const gachaFrontObj   = nodes['Null6'].children[2];
-
-  //params
+  // const gachaFrontMat   = scene.children[2].children[5].children[2].material;
+  
   useEffect(() => {
-    console.log("nodes ===> ", atomObj);
+    // console.log("cloner ===> ",nodes['Cloner'].children[0]);
   }, [nodes]);
 
   /**
@@ -97,30 +101,44 @@ const MainSceneComponent = ({exitEvent}) => {
         color     = {0xffffff}
         intensity = {2}
       />
-      <Floor />
+      {/* <primitive object={scene} >
+        <mesh />
+      </primitive> */}
       <Atom atomObj = {atomObj} />
-      {/* <Cloner scene={scene} /> */}
       {
-        GachaData.map((item, index) => (
-          <GachaMachine
-            key           = {index+'gacha'}
-            item          = {item}
-            screenObj     = {gachaScreenObj}
-            backObj       = {gachaBackObj}
-            frontObj      = {gachaFrontObj}
-            viewMode      = {viewerType}
-            onClick = {() => cameraInAnimate(item)}
+        ClonerData.map((item, index) => (
+          <Cloner
+            key  = {index + 'cloner'}
+            item = {item}
           />
         ))
       }
+      {
+        GachaData.map((item, index) => (
+          <GachaMachine
+            key           = {index + 'gacha'}
+            item          = {item}
+            screenObj     = {gachaScreenObj}
+            screenMat     = {gachaScreenMat}
+            backObj       = {gachaBackObj}
+            // backMat       = {gachaBackMat}
+            frontObj      = {gachaFrontObj}
+            // frontMat      = {gachaFrontMat}
+            viewMode      = {viewerType}
+            onClick       = {() => cameraInAnimate(item)}
+          />
+        ))
+      }
+      <Floor />
       <OrbitControls
         ref           = {camera}
-        minDistance   = {7500}
-        maxDistance   = {10500}
+        // minDistance   = {7500}
+        minDistance   = {20500}
+        maxDistance   = {20500}
         target        = {[0, 10, 0]}
         enablePan     = {true}
         enableRotate  = {true}
-        maxPolarAngle = {Math.PI / 2.2}
+        maxPolarAngle = {Math.PI / 3}
         enableDamping = {true}
         dampingFactor = {0.07}
       />
