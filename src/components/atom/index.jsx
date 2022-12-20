@@ -1,7 +1,11 @@
 import * as THREE from 'three'
 import React from 'react'
+import { extend } from 'react-three-fiber'
 import { useFrame } from 'react-three-fiber'
 import { useRef } from 'react'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
+
+extend ([EffectComposer, Bloom]);
 
 const Atom = ({atomObj}) => {
 
@@ -16,8 +20,9 @@ const Atom = ({atomObj}) => {
   })
 
   return (
-    <group name='atom' ref = {atomRef} position = {[0, 500, 0]}>
+    <group name='atom' ref = {atomRef} position = {[0, 300, 0]}>
       <mesh geometry = {atomObj.geometry}>
+        <meshStandardMaterial color={'#5357c7'} opacity={0.7} transparent />
       </mesh>
     </group>
   )

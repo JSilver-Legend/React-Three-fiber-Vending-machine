@@ -4,10 +4,8 @@ import { RepeatWrapping } from 'three'
 
 const Floor = () => {
 
-  const floorBumpMat = useTexture("/asset/texture/floor.jpg")
-  floorBumpMat.wrapS = RepeatWrapping;
-  floorBumpMat.wrapT = RepeatWrapping;
-  floorBumpMat.repeat.set(10, 10)
+  const floorMat = useTexture('/asset/texture/floor_map.jpg')
+  const floorBumpMat=useTexture('/asset/texture/floor_bump_map.jpg')
   
   return (
     <mesh name = 'floor' position = {[0, -720, 0]} rotation = {[-Math.PI / 2, 0, Math.PI / 2]}>
@@ -27,9 +25,10 @@ const Floor = () => {
         // distortionMap={floorBumpMat}
         color="#444444"
         metalness={0.5}
-        roughnessMap={floorBumpMat}
+        map={floorMat}
         roughness={0.2}
-        // normalMap={floorBumpMat}
+        roughnessMap={floorMat}
+        bumpMap={floorBumpMat}
         normalScale={1}
         reflectorOffset={1}
       />

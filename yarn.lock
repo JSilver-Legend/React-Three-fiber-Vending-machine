@@ -9104,7 +9104,7 @@ three-stdlib@^2.18.1:
     potpack "^1.0.1"
     zstddec "^0.0.2"
 
-three-stdlib@^2.8.11:
+three-stdlib@^2.20.4, three-stdlib@^2.8.11:
   version "2.20.4"
   resolved "https://registry.yarnpkg.com/three-stdlib/-/three-stdlib-2.20.4.tgz#89a006c53f12c0b037dc9242874bcada8865bd00"
   integrity sha512-Ksy7h//nnH5dhohbmE6mT/gM54dtmcAjaC9Srx7AJ7xpmCEX3IASkZyUkVqNXv3NZFqx79Swq3sSSVqL4pF79Q==
