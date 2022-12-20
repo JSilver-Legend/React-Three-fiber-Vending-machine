@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { OrbitControls, useGLTF, Html } from '@react-three/drei';
-import gsap, { Power3 } from 'gsap';
+import gsap, { Power2 } from 'gsap';
 
 import { GachaData } from '../../utils/gachaData';
 import Floor from '../floor';
@@ -8,12 +8,14 @@ import Atom from '../atom';
 import Cloner from '../cloner';
 import { ClonerData } from '../../utils/clonerData'
 import Site from '../site';
+import { useFrame } from 'react-three-fiber';
 
 const MainSceneComponent = ({ exitEvent }) => {
 
   const { nodes, materials, scene } = useGLTF('/asset/model/gacha_2.glb');   // load model
 
   const camera = useRef();    // select camera in OrbitControls
+  let cameraPos = 0;
   const [viewerType, setViewerType] = useState('zoom-out');   // view mode hook
 
   const atomObj = nodes['Atom_Array1'].children[0];
@@ -23,6 +25,12 @@ const MainSceneComponent = ({ exitEvent }) => {
   const gachaBackMat = scene.children[2].children[5].children[1].material;
   const gachaFrontObj = nodes['Null6'].children[2];
   const gachaFrontMat = scene.children[2].children[5].children[2].material;
+
+  useFrame((state) => {
+    cameraPos = camera.current.getAzimuthalAngle();
+    // console.log('angle = ', cameraPos * 180 / Math.PI);
+  })
+
 
   useEffect(() => {
     // console.log("cloner ===> ",nodes['Cloner'].children[0]);
@@ -75,7 +83,6 @@ const MainSceneComponent = ({ exitEvent }) => {
               <div
                 className='wrapper'
                 onPointerDown={(e) => {
-                  console.log(camera);
                   if (viewMode === 'zoom-out') {
                     onClick();
                     //execute the first object's event when many objects were overlap.
@@ -118,6 +125,29 @@ const MainSceneComponent = ({ exitEvent }) => {
 
   /**
    * 
+   * Camera Position Check-----------------
+   * 
+   * @param item : gachaData value
+   */
+
+  const cameraPosCheck = (item) => {
+    let aziAngle;
+    if (cameraPos < 0 && item.rotation[1] > 0) {
+      console.log('- ==> +');
+      aziAngle = item.rotation[1] - 2 * Math.PI;
+      cameraInAnimate(item, aziAngle);
+    } else if (cameraPos > 0 && item.rotation[1] < 0) {
+      console.log('+ ==> -');
+      aziAngle = item.rotation[1] + 2 * Math.PI;
+      cameraInAnimate(item, aziAngle);
+    } else {
+      console.log('= ==> =');
+      aziAngle = item.rotation[1];
+      cameraInAnimate(item, aziAngle);
+    }
+  }
+  /**
+   * 
    * Camera View Mode------------------------------
    * 
    * @param exitEvent
@@ -131,19 +161,24 @@ const MainSceneComponent = ({ exitEvent }) => {
     // eslint-disable-next-line
   }, [exitEvent]);
 
-  const cameraInAnimate = (item) => {
+  const cameraInAnimate = (item, aziAngle) => {
+
+    console.log('cameraPos => ', cameraPos)
+    console.log('aziAngle => ', aziAngle)
+    console.log('item.rotation => ', item.rotation[1])
+
     camera.current.minAzimuthAngle = -Math.PI;
     camera.current.maxAzimuthAngle = Math.PI;
     if (camera) {
       gsap.to(camera.current, {
         duration: 2,
-        ease: Power3.easeInOut,
+        ease: Power2.easeInOut,
         onStart: () => {
           camera.current.enablePan = false;
           camera.current.enableRotate = false;
         },
-        minAzimuthAngle: item.rotation[1],
-        maxAzimuthAngle: item.rotation[1],
+        minAzimuthAngle: aziAngle,
+        maxAzimuthAngle: aziAngle,
         minPolarAngle: Math.PI / 2.2,
         maxPolarAngle: Math.PI / 2.2,
         minDistance: 7500,
@@ -160,7 +195,7 @@ const MainSceneComponent = ({ exitEvent }) => {
     if (camera) {
       gsap.to(camera.current, {
         duration: 2,
-        ease: Power3.easeInOut,
+        ease: Power2.easeInOut,
         onStart: () => {
           setViewerType('zoom-out');
         },
@@ -210,7 +245,7 @@ const MainSceneComponent = ({ exitEvent }) => {
             frontObj={gachaFrontObj}
             frontMat={gachaFrontMat}
             viewMode={viewerType}
-            onClick={() => cameraInAnimate(item)}
+            onClick={() => cameraPosCheck(item)}
           />
         ))
       }
@@ -226,6 +261,7 @@ const MainSceneComponent = ({ exitEvent }) => {
         enableDamping={true}
         dampingFactor={0.07}
       />
+      <axesHelper args={[10000]} />
     </>
   )
 }
