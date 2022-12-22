@@ -37,18 +37,18 @@ function App() {
         }
       }}
     >
-      <Environment preset="sunset" />
-      <fog attach="fog" args={['#000000', 18000, 23000]} />
+      {/* <Environment preset="sunset" /> */}
+      <fog attach="fog" args={['#000000', 17000, 20000]} />
       <color attach="background" args={['#000000']} />
       <pointLight
         position={[0, 10000, 0]}
         color={'#FFFFFF'}
-        intensity={0.5}
+        intensity={2.5}
       />
       <ambientLight
-        position={[0, 0, 3000]}
+        // position={[0, 0, 3000]}
         color="#FAFAFA"
-        intensity={0.5}
+        intensity={7}
       />
       <Suspense fallback={<Loading />}>
         <MainSceneComponent exitEvent={canvasClick} />

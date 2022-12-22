@@ -1,5 +1,8 @@
+import * as THREE from 'three'
 import React, { useRef, useEffect, useState } from 'react';
+import { useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Html } from '@react-three/drei';
+import { Selection, Select, EffectComposer, SelectiveBloom } from '@react-three/postprocessing'
 import gsap, { Power2 } from 'gsap';
 
 import { GachaData } from '../../utils/gachaData';
@@ -8,7 +11,6 @@ import Atom from '../atom';
 import Cloner from '../cloner';
 import { ClonerData } from '../../utils/clonerData'
 import Site from '../site';
-import { useFrame } from 'react-three-fiber';
 
 const MainSceneComponent = ({ exitEvent }) => {
 
@@ -18,6 +20,7 @@ const MainSceneComponent = ({ exitEvent }) => {
   let cameraPos = 0;
   const [viewerType, setViewerType] = useState('zoom-out');   // view mode hook
 
+  /** Gacha Props */
   const atomObj = nodes['Atom_Array1'].children[0];
   const gachaScreenObj = nodes['Null6'].children[0].children[0];
   const gachaScreenMat = materials['Mat'];
@@ -26,6 +29,13 @@ const MainSceneComponent = ({ exitEvent }) => {
   const gachaFrontObj = nodes['Null6'].children[2];
   const gachaFrontMat = scene.children[2].children[5].children[2].material;
 
+  /** Cloner Texture Props */
+  const clonerTexture = [
+    useLoader(THREE.TextureLoader, '/asset/texture/cloner_1.jpg'),
+    useLoader(THREE.TextureLoader, '/asset/texture/cloner_3.jpg'),
+    useLoader(THREE.TextureLoader, '/asset/texture/cloner_2.jpg')
+  ]
+
   useFrame((state) => {
     cameraPos = camera.current.getAzimuthalAngle();
     // console.log('angle = ', cameraPos * 180 / Math.PI);
@@ -33,7 +43,7 @@ const MainSceneComponent = ({ exitEvent }) => {
 
 
   useEffect(() => {
-    // console.log("cloner ===> ",nodes['Cloner'].children[0]);
+    // console.log("clonerTexture ===> ", clonerTexture[0]);
   }, [nodes]);
 
   /**
@@ -61,8 +71,6 @@ const MainSceneComponent = ({ exitEvent }) => {
           position={item.position}
           rotation={item.rotation}
           scale={[100, 100, 100]}
-
-
         >
           <mesh
             name='screen'
@@ -220,19 +228,22 @@ const MainSceneComponent = ({ exitEvent }) => {
 
   return (
     <>
-      {/* <primitive object={scene} >
-        <mesh />
-      </primitive> */}
-      <Atom atomObj={atomObj} />
-      {
-        ClonerData.map((item, index) => (
-          <Cloner
-            key={index + 'cloner'}
-            item={item}
-            index={index}
-          />
-        ))
-      }
+      <Selection enabled={true}>
+        <EffectComposer>
+          <SelectiveBloom luminanceThreShold={0} intensity={2} />
+        </EffectComposer>
+        <Atom atomObj={atomObj} />
+        {
+          ClonerData.map((item, index) => (
+            <Cloner
+              key={index + 'cloner'}
+              item={item}
+              index={index}
+              texture={clonerTexture[index % 3]}
+            />
+          ))
+        }
+      </Selection>
       {
         GachaData.map((item, index) => (
           <GachaMachine
