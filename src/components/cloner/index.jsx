@@ -4,7 +4,6 @@ import { useFrame } from '@react-three/fiber';
 import { Select } from '@react-three/postprocessing';
 
 const Cloner = ({ item, index, texture }) => {
-  console.log(item);
   const clonerRef = useRef()
 
   const positionLerp = (timer) => {

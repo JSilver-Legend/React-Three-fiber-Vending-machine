@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import React, { useRef, useEffect, useState } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Html } from '@react-three/drei';
-import { Selection, Select, EffectComposer, SelectiveBloom } from '@react-three/postprocessing'
+import { Selection, EffectComposer, SelectiveBloom } from '@react-three/postprocessing'
 import gsap, { Power2 } from 'gsap';
 
 import { GachaData } from '../../utils/gachaData';
@@ -31,19 +31,18 @@ const MainSceneComponent = ({ exitEvent }) => {
 
   /** Cloner Texture Props */
   const clonerTexture = [
-    useLoader(THREE.TextureLoader, '/asset/texture/cloner_1.jpg'),
+    useLoader(THREE.TextureLoader, '/asset/texture/cloner_3.jpg'),
     useLoader(THREE.TextureLoader, '/asset/texture/cloner_3.jpg'),
     useLoader(THREE.TextureLoader, '/asset/texture/cloner_2.jpg')
   ]
 
   useFrame((state) => {
     cameraPos = camera.current.getAzimuthalAngle();
-    // console.log('angle = ', cameraPos * 180 / Math.PI);
   })
 
 
   useEffect(() => {
-    // console.log("clonerTexture ===> ", clonerTexture[0]);
+    //
   }, [nodes]);
 
   /**
@@ -141,15 +140,12 @@ const MainSceneComponent = ({ exitEvent }) => {
   const cameraPosCheck = (item) => {
     let aziAngle;
     if (cameraPos < 0 && item.rotation[1] > 0) {
-      console.log('- ==> +');
       aziAngle = item.rotation[1] - 2 * Math.PI;
       cameraInAnimate(item, aziAngle);
     } else if (cameraPos > 0 && item.rotation[1] < 0) {
-      console.log('+ ==> -');
       aziAngle = item.rotation[1] + 2 * Math.PI;
       cameraInAnimate(item, aziAngle);
     } else {
-      console.log('= ==> =');
       aziAngle = item.rotation[1];
       cameraInAnimate(item, aziAngle);
     }
@@ -170,11 +166,6 @@ const MainSceneComponent = ({ exitEvent }) => {
   }, [exitEvent]);
 
   const cameraInAnimate = (item, aziAngle) => {
-
-    console.log('cameraPos => ', cameraPos)
-    console.log('aziAngle => ', aziAngle)
-    console.log('item.rotation => ', item.rotation[1])
-
     camera.current.minAzimuthAngle = -Math.PI;
     camera.current.maxAzimuthAngle = Math.PI;
     if (camera) {
@@ -230,7 +221,7 @@ const MainSceneComponent = ({ exitEvent }) => {
     <>
       <Selection enabled={true}>
         <EffectComposer>
-          <SelectiveBloom luminanceThreShold={0} intensity={2} />
+          <SelectiveBloom luminanceThreShold={0} intensity={3} />
         </EffectComposer>
         <Atom atomObj={atomObj} />
         {
