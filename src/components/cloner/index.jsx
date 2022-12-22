@@ -53,6 +53,8 @@ const Cloner = ({ item, index, texture }) => {
             roughness={0.2}
             metalness={0.3}
             map={texture}
+            opacity={0.5}
+            transparent
           />
         </mesh>
       </group>

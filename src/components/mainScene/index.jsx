@@ -30,6 +30,8 @@ const MainSceneComponent = ({ exitEvent }) => {
   const gachaFrontObj = nodes['Null6'].children[2];
   const gachaFrontMat = scene.children[2].children[5].children[2].material;
 
+  // const glowBlue = new THREE.MeshBasicMaterial({ color: new THREE.Color(0, 10, 30), toneMapped: false })
+
   /** Cloner Texture Props */
   const clonerTexture = [
     useLoader(THREE.TextureLoader, '/asset/texture/cloner_3.jpg'),
@@ -43,7 +45,7 @@ const MainSceneComponent = ({ exitEvent }) => {
 
 
   useEffect(() => {
-    //
+    console.log(gachaBackMat.map);
   }, [nodes]);
 
   /**
@@ -114,18 +116,30 @@ const MainSceneComponent = ({ exitEvent }) => {
           </mesh>
           <mesh
             name='back'
-            material={backMat}
+            // material={backMat}
             geometry={backObj.geometry}
             position={[0.012, 1.388, -5.493]}
             rotation={[-Math.PI / 2, 0, 0]}
-          />
+          >
+            <meshStandardMaterial
+              map={backMat.map}
+              metalness={0.98}
+              roughness={0.6}
+            />
+          </mesh>
           <mesh
             name='front'
-            material={frontMat}
+            // material={frontMat}
             geometry={frontObj.geometry}
             position={[0.012, -2.005, 1.628]}
             rotation={[-Math.PI / 2, 0, 0]}
-          />
+          >
+            <meshStandardMaterial
+              map={frontMat.map}
+              metalness={0.98}
+              roughness={0.6}
+            />
+          </mesh>
         </group>
       </>
     )
@@ -266,7 +280,7 @@ const MainSceneComponent = ({ exitEvent }) => {
         enableDamping={true}
         dampingFactor={0.07}
       />
-      <axesHelper args={[10000]} />
+      {/* <axesHelper args={[10000]} /> */}
     </>
   )
 }

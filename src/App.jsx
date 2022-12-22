@@ -37,13 +37,13 @@ function App() {
         }
       }}
     >
-      {/* <Environment preset="sunset" /> */}
+      <Environment preset="sunset" />
       <fog attach="fog" args={['#000000', 17000, 20000]} />
       <color attach="background" args={['#000000']} />
       <pointLight
         position={[0, 10000, 0]}
         color={'#FFFFFF'}
-        intensity={2.5}
+        intensity={0.5}
       />
       <ambientLight
         color="#FAFAFA"
