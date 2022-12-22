@@ -1,6 +1,6 @@
 import React from 'react'
 import * as THREE from 'three'
-import { MeshReflectorMaterial, useTexture } from '@react-three/drei'
+import { MeshReflectorMaterial } from '@react-three/drei'
 import { useLoader } from '@react-three/fiber'
 import { RepeatWrapping } from 'three'
 const Floor = () => {
@@ -23,7 +23,7 @@ const Floor = () => {
         mirror={0.75}
         mixBlur={10}
         mixStrength={2}
-        // blur={[40, 10]}
+        // blur={[400, 100]}
         minDepthThreshold={0.8}
         maxDepthThreshold={1.2}
         depthScale={0}

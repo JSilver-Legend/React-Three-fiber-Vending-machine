@@ -11,6 +11,7 @@ import Atom from '../atom';
 import Cloner from '../cloner';
 import { ClonerData } from '../../utils/clonerData'
 import Site from '../site';
+import TorusObj from '../torus';
 
 const MainSceneComponent = ({ exitEvent }) => {
 
@@ -234,6 +235,7 @@ const MainSceneComponent = ({ exitEvent }) => {
             />
           ))
         }
+        <TorusObj />
       </Selection>
       {
         GachaData.map((item, index) => (
@@ -255,10 +257,11 @@ const MainSceneComponent = ({ exitEvent }) => {
       <OrbitControls
         ref={camera}
         minDistance={8500}
-        maxDistance={10500}
+        maxDistance={12500}
         target={[0, 10, 0]}
         enablePan={true}
         enableRotate={true}
+        minPolarAngle={Math.PI / 3.2}
         maxPolarAngle={Math.PI / 2.2}
         enableDamping={true}
         dampingFactor={0.07}

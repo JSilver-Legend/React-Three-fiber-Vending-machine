@@ -46,7 +46,6 @@ function App() {
         intensity={2.5}
       />
       <ambientLight
-        // position={[0, 0, 3000]}
         color="#FAFAFA"
         intensity={7}
       />
